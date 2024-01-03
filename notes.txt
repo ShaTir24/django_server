@@ -1,0 +1,70 @@
+Django is a framework to create a website using python. Precisely on backend part (like server and databases).
+
+Django-admin is the command line utility for administrative tasks to be performed. Generally if we need to switch among multiple projects, we use django-admin. When working on a single project, use manage.py. Manage.py sets the DJANGO_SETTINGS_MODULE variable pointing towards the settings.py of your project.
+
+django-admin startproject <name> : command to create a project and required starter files.
+manage.py is used to create database, provide access to users, etc. and is not changed in the project. It is used to boot a web server.
+__init__.py is used to describe a package.
+settings.py is used as a configuration object for your website. For example authentication, session, middleware management of a web server.
+urls.py is used to specify the sub pages of the website. It is used to call a specific function when a particular route is followed.
+wsgi.py is the web server gateway interface.
+asgi.py is asynchronous server gateway interface. (similar to AJAX)
+
+To boot up (initialize) the web server, 
+python manage.py runserver
+
+All the main components of a website which it is composed of is known as App in django. For example, home section, forum section, player, etc. Every app performs a basic particular task contributing to the website.
+To create an app,
+Python manage.py startapp <name>
+
+App Structure:
+migrations folder: is used to connect the various components to the database.
+Admin.py admin functionality for a website, to provide admin functions for a website.
+App.py is the configuration file for our app, info. Like app name, etc.
+Model.py is the blueprint of the data to be stored in the database. The structure in which the data will be stored is created in here. Example: Tables required to store data, with columns specification.
+Tests.py is used to write the test cases to identify any bug in the code.
+Views.py is used to declare python functions which accepts user requests and returns something.
+
+Default route (URL) initiated by startproject is /admin in the urls.py file.
+The username and password needs to be configurated using following commands:
+	1. Run python manage.py migrate - to transfer all the data into manage directory. It syncs the files with the database (sqlite3).
+	2. Run python manage.py createsuperuser to enter username, email and password.
+
+The webpages route is mentioned in urls.py file using python regex text. Eg. r'^admin/.'
+
+The 'good design' suggests to mention the higher level urls in the main file and subsidiary urls in that particular component's urls.py file. Default URL is denoted using regex by: (r'^$').
+The function used to set the urls is path(route, view, name="None")
+Path function doesn't require regular expression. Use re_path() instead.
+
+Creating the view to display in the webpage:
+	1. Import HTTP response module.
+	2. Define the function with the name same as view name.
+	3. Write the HTML code inside the return HttpResponse() function.
+
+The migrate function looks up at the INSTALLED_APPLICATIONS in settings.py file and looks for the tables required for that applications in database. Synchronization of tables is done by running this command.
+
+Model is the blueprint to represent the data. All these files are created in the models.py file. Import models from django.db file.
+A class in the model file is equivalent to table in an SQL database. Inside it we declare variables representing columns. Each variable is declared with data type (using models.<datatype>).
+
+Data Type - Syntax
+Text - CharField(max_len)
+
+
+To associate a table (child) with a parent table, we use Foreign Key. Similarily,:
+Song (child class) and Album (parent class)-
+class Song(models.Model):
+	album = model.ForeignKey(Album, on_delete=models.CASCADE)
+	… 
+models.CASCADE means if we delete the parent class than delete the child class as well.
+
+## To include the application (view) made in separate folder, it must be mentioned in the INSTALLED_APPLICATIONS variable in the settings.py file.
+e.g. music.app.MusicConfig
+
+## After every change in the model or other database related configurations in the app, we need to perform migrate. In order to sync with the current model of the project and then boot the server. 
+
+To perform migrations to a particular app, we need to run the following command:
+python migrate.py makemigrations <appname>
+
+In order to view and save the migrations in the SQL file, the SQL commands performed in the background during the migration, we run following command:
+python manage.py sqlmigrate <appname> <migration_file_initial> (eg. 0001)
+
